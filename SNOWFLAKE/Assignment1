@@ -33,7 +33,7 @@ describe table sbassignment_copy;
 ---2 Question-Change the Primary key to Order Id Column.
 alter table sbassignment_copy
 drop primary key;
-alter 
+alter table sbassignment_copy
 add primary key(order_id);
 describe table sbassignment_copy;
 
@@ -42,7 +42,7 @@ describe table sbassignment_copy;
 ----4 Question - Create a new column called order_extract and extract the number after the last - from order_id column and update it.
 alter table sbassignment_copy
 add column order_extract varchar(30);
-update sbassignment_copy set order_extract=split_part(order_id,'-',3) where order_extract is NULL;
+update sbassignment_copy set  order_extract=split_part(order_id,'-',3) where order_extract is NULL;
 
 ----5.Create a new column called Discount Flag and categorize it based on discount.Use ‘Yes’ if the discount is greater than zero else ‘No’.
 
