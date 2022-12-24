@@ -1,1 +1,72 @@
+create or replace table sb_assignment(
+order_id varchar(50),
+order_date date primary key,
+ship_date date,
+ship_mode varchar(50),
+customer_name varchar(50),
+segment	varchar(50),
+state varchar(50),
+country	varchar(50),
+market	varchar(50),
+region string,
+product_id varchar(50),
+category varchar(50),
+sub_category varchar(50),
+product_name varchar(300),
+total_sales number(10,2),
+quantity number(10,2),
+totaldiscount number(10,5),
+profit number(10,4),
+shipping_cost number(10,3),
+order_priority varchar(30),
+year varchar(10)
+);
+
+
+create or replace table sbassignment_copy as select*from sb_assignment;
+select*from sbassignment_copy;
+describe table sbassignment_copy;
+
+
+---2 Question-Change the Primary key to Order Id Column.
+alter table sbassignment_copy
+drop primary key;
+alter 
+add primary key(order_id);
+describe table sbassignment_copy;
+
+----3 Question- The Date format to be in YYYY-MM-DD Format;
+
+----4 Question - Create a new column called order_extract and extract the number after the last - from order_id column and update it.
+alter table sbassignment_copy
+add column order_extract varchar(30);
+update sbassignment_copy set order_extract=split_part(order_id,'-',3) where order_extract is NULL;
+
+----5.Create a new column called Discount Flag and categorize it based on discount.Use ‘Yes’ if the discount is greater than zero else ‘No’.
+select*,
+ case
+ when totaldiscount>0 then 'Yes'
+ else 'No'
+ end as Discount_Flag
+from sbassignment_copy;
+
+----6 Question-Create a new column called process days and calculate how many days it takes for each order id to process from the order to its shipment.
+alter table sbassignment_copy
+add column process_days int;
+update sbassignment_copy set process_days= datediff(days,ORDER_DATE,SHIP_DATE) where process_days is NULL;
+
+select*from sbassignment_copy;
+describe table sbassignment_copy;
+
+
+----7 Create a new column called Rating and then based on the Process dates give rating like given below.
+select*,
+case
+when process_days<=3 then '5'
+when process_days>3 and process_days<=6 then '4'
+when process_days>6 and process_days<=10 then'3'
+when process_days>10 then '2'
+else'1'
+end as Rating
+from sbassignment_copy;
 
